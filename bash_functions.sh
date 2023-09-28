@@ -89,7 +89,7 @@ function cppshell()
     # write default to file
     if [ $ISC = true ]
     then
-        echo "#include <stdio.h>\n\n\nvoid main()\n{\n\tprintf(\"hello world!\");\n}\n" > "$TMPMAIN"
+        echo "#include <stdio.h>\n\n\nvoid main()\n{\n\tprintf(\"hello world!\");\n\treturn 0;\n}\n" > "$TMPMAIN"
     else
         echo "#include <iostream>\n\n\nint main()\n{\n\tstd::cout << \"hello world!\\\n\";\n\treturn 0;\n}\n" > "$TMPMAIN"
     fi
