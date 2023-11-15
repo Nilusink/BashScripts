@@ -6,6 +6,9 @@ export CLR_RED='\033[0;31m'
 export CLR_GREEN='\033[0;32m'
 export CLR_BLUE='\033[0;34m'
 
+export FUNCTION_ASSETS_DIR="$(echo ~)/bash_scripts/presets"  # replace with your path
+export PYTHON_PROJECTS_DIR="$(echo ~)/PycharmProjects"  # replace with your path
+
 
 function cl()
 {
@@ -89,9 +92,9 @@ function cppshell()
     # write default to file
     if [ $ISC = true ]
     then
-        echo "#include <stdio.h>\n\n\nvoid main()\n{\n\tprintf(\"hello world!\");\n\treturn 0;\n}\n" > "$TMPMAIN"
+        cat "$FUNCTION_ASSETS_DIR/default.c" > "$TMPMAIN"
     else
-        echo "#include <iostream>\n\n\nint main()\n{\n\tstd::cout << \"hello world!\\\n\";\n\treturn 0;\n}\n" > "$TMPMAIN"
+        cat "$FUNCTION_ASSETS_DIR/default.cpp" > "$TMPMAIN"
     fi
 
     # open in editor
@@ -120,3 +123,52 @@ function install_tar()
     makepkg -si
 }
 
+
+function pproject()
+{
+    # help menu
+    if [ "$1" = "-h" ]
+    then
+        echo "pproject [-h] <project_name> <python_path>"
+	return
+    fi;
+
+    # check if python path is given
+    if [ "$2" = "" ]
+    then
+        PYPATH="$(where python3)"
+    else
+        PYPATH="$2"
+    fi;
+
+    printf "${CLR_BLUE}::${CLR_RESET} python version: ${CLR_GREEN}$($PYPATH --version)${CLR_RESET}\n"
+    printf "${CLR_BLUE}::${CLR_RESET} creating ${CLR_GREEN}${PPATH}${CLR_RESET}\n"
+
+    # get project directory
+    PPATH="$PYTHON_PROJECTS_DIR/$1"
+
+    # create directory + files
+    mkdir "$PPATH"
+
+    ## venv
+    printf "${CLR_BLUE}::${CLR_RESET} creating venv ...\r"
+    "$PYPATH" -m venv "$PPATH/venv"
+    printf "${CLR_BLUE}::${CLR_RESET} creating venv ${CLR_GREEN}done${CLR_RESET}\n"
+    printf "${CLR_BLUE}::${CLR_RESET} activating venv ...\r"
+    source "$PPATH/venv/bin/activate"
+    printf "${CLR_BLUE}::${CLR_RESET} activating venv ${CLR_GREEN}done${CLR_RESET}\n"
+
+
+    ## main.py
+    printf "${CLR_BLUE}::${CLR_RESET} creating files ...\r"
+    printf "#! venv/bin/python\n" > "$PPATH/main.py"
+    chmod ug+x "$PPATH/main.py"
+
+    ## other files
+    touch "$PPATH/requirements.txt"
+
+    printf "${CLR_BLUE}::${CLR_RESET} creating files ${CLR_GREEN}done${CLR_RESET}\n"
+
+    # change into directory
+    cd "$PPATH"
+}
