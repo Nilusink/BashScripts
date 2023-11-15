@@ -133,19 +133,19 @@ function pproject()
 	return
     fi;
 
-    # check if python path is given
+    # check if python path is given 
     if [ "$2" = "" ]
     then
-        PYPATH="$(where python3)"
+        local PYPATH="$(where python3)"
     else
-        PYPATH="$2"
+        local PYPATH="$2"
     fi;
 
     printf "${CLR_BLUE}::${CLR_RESET} python version: ${CLR_GREEN}$($PYPATH --version)${CLR_RESET}\n"
     printf "${CLR_BLUE}::${CLR_RESET} creating ${CLR_GREEN}${PPATH}${CLR_RESET}\n"
 
     # get project directory
-    PPATH="$PYTHON_PROJECTS_DIR/$1"
+    local PPATH="$PYTHON_PROJECTS_DIR/$1"
 
     # create directory + files
     mkdir "$PPATH"
@@ -163,6 +163,10 @@ function pproject()
     printf "${CLR_BLUE}::${CLR_RESET} creating files ...\r"
     printf "#! venv/bin/python\n" > "$PPATH/main.py"
     chmod ug+x "$PPATH/main.py"
+
+    ## requirements syncer
+    echo '#! /usr/bin/zsh\necho "${$(pip freeze)//==/~=}" > requirements.txt' > "$PPATH/sync_requirements"
+    chmod ug+x "$PPATH/sync_requirements" 
 
     ## other files
     touch "$PPATH/requirements.txt"
