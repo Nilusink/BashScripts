@@ -12,4 +12,6 @@ mdreader [filepath]  # simple MARKDOWN reader using pandoc and lynx
 cppshell [-c]  # creates an IDE-like envoirement for quick C / C++ testing
 
 install_tar [filepath]  # compiles and installes a .tar.gz compressed package
+
+pproject [-h] [-n project_name] [-d project_directory] [-e python_executable]
 ```
