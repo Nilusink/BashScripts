@@ -133,19 +133,43 @@ function pproject()
 	return
     fi;
 
+    local PNAME="$1"
+    local PYVER=""
+    local PPATH="$PYTHON_PROJECTS_DIR"
+
+    while getopts ":n:d:e:" option; do
+        case $option in
+            n)
+                PNAME="$OPTARG"
+		;;
+            d)
+		PPATH="$OPTARG"
+		;;
+	    e)
+		PYVER="$OPTARG"
+		;;
+	    *)
+		echo "Usage: $0 [-n project_name] [-d project_directory] [-e python_executable]"
+		exit 1
+		;;
+	esac
+    done
+                
+                
+
     # check if python path is given 
-    if [ "$2" = "" ]
+    if [ "$PYVER" = "" ]
     then
-        local PYPATH="$(where python3)"
+        local PYPATH="$(where python3 | head -n 1)"
     else
-        local PYPATH="$2"
+        local PYPATH="$PYVER"
     fi;
 
     printf "${CLR_BLUE}::${CLR_RESET} python version: ${CLR_GREEN}$($PYPATH --version)${CLR_RESET}\n"
-    printf "${CLR_BLUE}::${CLR_RESET} creating ${CLR_GREEN}${PPATH}${CLR_RESET}\n"
-
+ 
     # get project directory
-    local PPATH="$PYTHON_PROJECTS_DIR/$1"
+    local PPATH="$PPATH/$PNAME"
+    printf "${CLR_BLUE}::${CLR_RESET} creating ${CLR_GREEN}${PPATH}${CLR_RESET}\n"
 
     # create directory + files
     mkdir "$PPATH"
