@@ -189,7 +189,7 @@ function pproject()
     chmod ug+x "$PPATH/main.py"
 
     ## requirements syncer
-    echo '#! /usr/bin/zsh\necho "${$(pip freeze)//==/~=}" > requirements.txt' > "$PPATH/sync_requirements"
+    echo '#! /usr/bin/zsh\necho "${$(./venv/bin/pip freeze)//==/~=}" > requirements.txt' > "$PPATH/sync_requirements"
     chmod ug+x "$PPATH/sync_requirements" 
 
     ## other files
